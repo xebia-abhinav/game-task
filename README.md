@@ -1,12 +1,14 @@
-# game-task
+# Game of Three
 
-Start app
+## Start app
 
 ```
 npm run dev
 ```
 
-Start game API
+## APIs
+
+### Start game
 
 ```
 {
@@ -18,7 +20,7 @@ Start game API
 }
 ```
 
-Join game API
+### Join game
 
 ```
 {
