@@ -46,7 +46,12 @@ router.post("/join", async (req, res, handleError) => {
   const ppl = [...gameData.ppl, playerId];
 
   try {
-    await db.setKey(game, { ...gameData, ppl });
+    await db.setKey(game, {
+      ...gameData,
+      ppl,
+      next: playerId,
+      status: status.inProgress,
+    });
   } catch (err) {
     return handleError({ error: "Error joining game: " + err.toString() });
   }
@@ -63,12 +68,12 @@ router.post("/play", async (req, res, handleError) => {
 
   if (!gameData)
     return handleError({ error: "Error playing game. Game Id incorrect." });
-  if (gameData.ppl.indexOf(player) < 0)
+  if (gameData.next !== player)
     return handleError({ error: "Unauthorized player." });
   if (gameData.status === status.end)
     return res.json({ status: "ENDED", winner: gameData.winner });
 
-  const newNum = (gameData.num + choice) / 3;
+  const newNum = Math.floor((gameData.num + choice) / 3);
   // HANDLE WIN
   if (newNum === 1) {
     let newGameState = {
@@ -87,6 +92,20 @@ router.post("/play", async (req, res, handleError) => {
     }
     return res.json({ choice, num: newNum, status: "YOU WIN" });
   }
+  let newGameState = {
+    ...gameData,
+    next: gameData.ppl[gameData.ppl.indexOf(player) + 1] || gameData.ppl[0],
+    status: status.inProgress,
+    num: newNum,
+  };
+  try {
+    await db.setKey(game, newGameState);
+  } catch (error) {
+    return handleError({
+      error: "Unable to update game state. " + error.toString(),
+    });
+  }
+  return res.json({ choice, num: newNum, status: status.inProgress });
 });
 
 router.get("/stat/:game", async (req, res, handleError) => {
