@@ -27,3 +27,13 @@ npm run dev
     "game":{{gameId}}
 }
 ```
+
+### Play turn
+
+```
+{
+    "game":{{gameId}},
+    "choice": 1,
+    "player": {{nextPlayer}}
+}
+```
