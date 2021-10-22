@@ -4,7 +4,7 @@ const db = require("../service/db");
 const generator = require("../service/idGenerator");
 const { status } = require("../service/constants");
 
-router.post("/startGame", async (req, res, handleError) => {
+router.post("/start", async (req, res, handleError) => {
   const { num, bot } = req.body;
   const gameId = generator.genGameId();
 
