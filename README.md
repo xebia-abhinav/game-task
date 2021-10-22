@@ -11,6 +11,7 @@ npm run dev
 ### Start game
 
 ```
+POST /start
 {
     "num": 29,
     "bot": {
@@ -23,6 +24,7 @@ npm run dev
 ### Join game
 
 ```
+POST /join
 {
     "game":{{gameId}}
 }
@@ -31,9 +33,16 @@ npm run dev
 ### Play turn
 
 ```
+POST /play
 {
     "game":{{gameId}},
     "choice": 1,
     "player": {{nextPlayer}}
 }
+```
+
+### Game status
+
+```
+GET /stat/:gameId
 ```
